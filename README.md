@@ -148,7 +148,7 @@ such as in the below image:
 
 ![Raised Exception for Update Action](https://s3.amazonaws.com/flatiron-bucket/readme-lessons/update_raised_exception.png)
 
-As you can see, the parameters are being passed to the `update` action. With
+As you can see, the parameters are being passed to the `update` action. The `form_for` has some additional functionality where you should see that it reshaped our params to have an `:article => {}` key with a hash of `description` and `title` in it as a value. With
 that in mind, let's implement the functionality needed inside of the `update`
 action so that it will take the form data and update the specified record. Let's
 sketch out a basic flow for what the `update` action should do:
@@ -169,10 +169,12 @@ sketch out a basic flow for what the `update` action should do:
 We'll take advantage of Active Record's `update` method so that we're not
 manually assigning each attribute:
 
+(note: in the below snippet we've shortened `@article.update(title: params[:article][:title], description: params[:article][:description])` to `@article.update(params[:article])` because `params[:article]` will be equal to a hash `{title: "I'm Changed", description: "And here too!"}` whose key value pairs will be parsed out into the matching argument names and values)
+
 ```ruby
 def update
   @article = Article.find(params[:id])
-  @article.update(title: params[:title], description: params[:description])
+  @article.update(params[:article])
   redirect_to article_path(@article)
 end
 ```
